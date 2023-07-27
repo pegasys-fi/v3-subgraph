@@ -12,7 +12,8 @@ import {
   PoolHourData,
   TickDayData,
   Tick,
-  UserDayData
+  UserWeekData,
+  UserMonthData
 } from './../types/schema'
 import { FACTORY_ADDRESS } from './constants'
 import { ethereum } from '@graphprotocol/graph-ts'
@@ -253,25 +254,48 @@ export function updateTickDayData(tick: Tick, event: ethereum.Event): TickDayDat
   return tickDayData as TickDayData
 }
 
-export function updateUserDayData(event: ethereum.Event): UserDayData {
+export function updateUserWeekData(event: ethereum.Event): UserWeekData {
   let timestamp = event.block.timestamp.toI32()
-  let dayID = timestamp / 86400
-  let dayStartTimestamp = dayID * 86400
+  let dayID = timestamp / 604800
+  let dayStartTimestamp = dayID * 604800
   let userDayID = event.transaction.from.toHexString()
     .toString()
     .concat('-')
     .concat(dayID.toString())
 
-  let userDayData = UserDayData.load(userDayID)
-  if (userDayData === null) {
-    userDayData = new UserDayData(userDayID)
-    userDayData.date = dayStartTimestamp
-    userDayData.address = event.transaction.from.toHexString()
-    userDayData.totalVolume = ZERO_BD
-    userDayData.txCount = 0
+  let userWeekData = UserWeekData.load(userDayID)
+  if (userWeekData === null) {
+    userWeekData = new UserWeekData(userDayID)
+    userWeekData.date = dayStartTimestamp
+    userWeekData.address = event.transaction.from.toHexString()
+    userWeekData.totalVolume = ZERO_BD
+    userWeekData.txCount = 0
   }
 
-  userDayData.save()
+  userWeekData.save()
 
-  return userDayData as UserDayData
+  return userWeekData as UserWeekData
+}
+
+export function updateUserMonthData(event: ethereum.Event): UserMonthData {
+  let timestamp = event.block.timestamp.toI32()
+  let dayID = timestamp / 2629743
+  let dayStartTimestamp = dayID * 2629743
+  let userDayID = event.transaction.from.toHexString()
+    .toString()
+    .concat('-')
+    .concat(dayID.toString())
+
+  let userMonthData = UserMonthData.load(userDayID)
+  if (userMonthData === null) {
+    userMonthData = new UserMonthData(userDayID)
+    userMonthData.date = dayStartTimestamp
+    userMonthData.address = event.transaction.from.toHexString()
+    userMonthData.totalVolume = ZERO_BD
+    userMonthData.txCount = 0
+  }
+
+  userMonthData.save()
+
+  return userMonthData as UserMonthData
 }

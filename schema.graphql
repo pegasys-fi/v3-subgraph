@@ -661,15 +661,27 @@ type User @entity {
   txCount: Int!
 }
 
-type UserDayData @entity {
-  # user address concatendated with date
+type UserWeekData @entity {
+  # user address concatendated with week
   id: ID!
   # user address
   address: String
-  # timestamp rounded to current day by dividing by 86400
+  # timestamp rounded to current week by dividing by 604800
   date: Int!
-  # total daily volume in trades performed by the User across all tracked tokens derived in terms of USD
+  # total weekly volume in trades performed by the User across all tracked tokens derived in terms of USD
   totalVolume: BigDecimal!
-  # number of daily transactions performed by the User
+  # number of weekly transactions performed by the User
+  txCount: Int!
+}
+type UserMonthData @entity {
+  # user address concatendated with month
+  id: ID!
+  # user address
+  address: String
+  # timestamp rounded to current day by dividing by 2629743
+  date: Int!
+  # total monthly volume in trades performed by the User across all tracked tokens derived in terms of USD
+  totalVolume: BigDecimal!
+  # number of monthly transactions performed by the User
   txCount: Int!
 }

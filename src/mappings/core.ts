@@ -19,7 +19,8 @@ import {
   updateTokenDayData,
   updateTokenHourData,
   updatePegasysDayData,
-  updateUserDayData
+  updateUserWeekData,
+  updateUserMonthData
 } from '../utils/intervalUpdates'
 import { createTick, feeTierToTickSpacing } from '../utils/tick'
 
@@ -426,7 +427,8 @@ export function handleSwap(event: SwapEvent): void {
   let token1DayData = updateTokenDayData(token1 as Token, event)
   let token0HourData = updateTokenHourData(token0 as Token, event)
   let token1HourData = updateTokenHourData(token1 as Token, event)
-  let userDayData = updateUserDayData(event)
+  let userWeekData = updateUserWeekData(event)
+  let userMonthData = updateUserMonthData(event)
 
   // update volume metrics
   pegasysDayData.volumeSYS = pegasysDayData.volumeSYS.plus(amountTotalSYSTracked)
@@ -463,8 +465,11 @@ export function handleSwap(event: SwapEvent): void {
   token1HourData.untrackedVolumeUSD = token1HourData.untrackedVolumeUSD.plus(amountTotalUSDTracked)
   token1HourData.feesUSD = token1HourData.feesUSD.plus(feesUSD)
 
-  userDayData.totalVolume = userDayData.totalVolume.plus(amountTotalUSDTracked)
-  userDayData.txCount += 1
+  userWeekData.totalVolume = userWeekData.totalVolume.plus(amountTotalUSDTracked)
+  userWeekData.txCount += 1
+
+  userMonthData.totalVolume = userMonthData.totalVolume.plus(amountTotalUSDTracked)
+  userMonthData.txCount += 1
 
   swap.save()
   token0DayData.save()
@@ -479,7 +484,8 @@ export function handleSwap(event: SwapEvent): void {
   token0.save()
   token1.save()
   user.save()
-  userDayData.save()
+  userWeekData.save()
+  userMonthData.save()
 
   // Update inner vars of current or crossed ticks
   let newTick = pool.tick!
