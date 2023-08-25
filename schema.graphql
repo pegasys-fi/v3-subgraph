@@ -659,6 +659,8 @@ type User @entity {
   totalVolume: BigDecimal!
   # total number of swaps this Trader has performed across all tracked tokens.
   txCount: Int!
+  # list of transaction hashes that this User has already processed
+  processedTransactions: [String!]!
 }
 
 type UserWeekData @entity {

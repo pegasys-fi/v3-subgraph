@@ -15,6 +15,9 @@ import {
   UserWeekData,
   UserMonthData
 } from './../types/schema'
+import {
+  Swap as SwapEvent
+} from '../types/templates/Pool/Pool'
 import { FACTORY_ADDRESS } from './constants'
 import { ethereum } from '@graphprotocol/graph-ts'
 
@@ -254,7 +257,7 @@ export function updateTickDayData(tick: Tick, event: ethereum.Event): TickDayDat
   return tickDayData as TickDayData
 }
 
-export function updateUserWeekData(event: ethereum.Event): UserWeekData {
+export function updateUserWeekData(event: SwapEvent): UserWeekData {
   let timestamp = event.block.timestamp.toI32()
   let dayID = timestamp / 604800
   let dayStartTimestamp = dayID * 604800
@@ -277,7 +280,7 @@ export function updateUserWeekData(event: ethereum.Event): UserWeekData {
   return userWeekData as UserWeekData
 }
 
-export function updateUserMonthData(event: ethereum.Event): UserMonthData {
+export function updateUserMonthData(event: SwapEvent): UserMonthData {
   let timestamp = event.block.timestamp.toI32()
   let dayID = timestamp / 2629743
   let dayStartTimestamp = dayID * 2629743
